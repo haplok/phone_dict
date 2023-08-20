@@ -1,3 +1,5 @@
+import os
+
 from dict_functions import *
 
 while True:
@@ -9,7 +11,14 @@ while True:
 [4] - Поиск записей по одной или нескольким характеристикам.''')
     select_key: str = input()
     if select_key == '0':
-        record_generator()
+        os.system('cls')
+        print('Введите количество генерируемых записей:', end=' ')
+        amount_record = input()
+        if amount_record.isdigit():
+            record_generator(int(amount_record))
+        else:
+            read_error(amount_record)
+        input()
     elif select_key == '1':
         page_by_page()
     elif select_key == '2':
@@ -20,7 +29,4 @@ while True:
         find_record()
 
     else:
-        print(
-            f'Ошибка ввода( {select_key} ), для возврата в главное меню нажмите Enter'
-        )
-        input()
+        read_error(select_key)
