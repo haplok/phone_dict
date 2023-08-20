@@ -1,27 +1,16 @@
-def page_by_page():
-    pass
-
-
-def insert_new():
-    pass
-
-
-def edit_dict():
-    pass
-
-
-def find_record():
-    pass
-
+from dict_functions import *
 
 while True:
     print('''Нажмите цифру для навигации по меню: 
+[0] - Генерация случайных записей в справочник,
 [1] - Вывод постранично записей из справочника на экран, 
 [2] - Добавление новой записи в справочник,
 [3] - Возможность редактирования записей в справочнике,
 [4] - Поиск записей по одной или нескольким характеристикам.''')
     select_key: str = input()
-    if select_key == '1':
+    if select_key == '0':
+        record_generator()
+    elif select_key == '1':
         page_by_page()
     elif select_key == '2':
         insert_new()
