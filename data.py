@@ -16,3 +16,6 @@ organizations = {
     'Digital Playground', 'Private', 'Passion-hd', 'Twistys', 'Ddf Network',
     'Spizoo', 'Wicked', 'FTV Girls', 'Hardx', 'Tushy'
 }
+
+text_file: str = 'phone_dict.txt'  # Навзавние такстового файла
+width: int = 140  # Ширина рамки вывода
