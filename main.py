@@ -17,10 +17,10 @@ while True:
         if amount_record.isdigit():
             record_generator(int(amount_record))
         else:
-            read_error(amount_record)
+            input_error(amount_record)
         input()
     elif select_key == '1':
-        page_by_page()
+        page_by_page(get_from_file())
     elif select_key == '2':
         insert_new()
     elif select_key == '3':
@@ -29,4 +29,4 @@ while True:
         find_record()
 
     else:
-        read_error(select_key)
+        input_error(select_key)

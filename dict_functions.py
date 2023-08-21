@@ -1,4 +1,5 @@
 import random
+import os
 from data import *
 
 
@@ -27,25 +28,41 @@ def record_generator(amount_record: int):
 # [1]
 def page_by_page(content: list):
     page = 1
-    print('┌' + '─' * (width - 2) + '┐')
-    print('│' + ' ' * ((width - 12) // 2) + f'Страница {page}' + ' ' *
-          ((width - 12) // 2) + '│')
-    print('│', end='')
-    title = ('-НОМЕР-', '-ИМЯ-', '-ФАМИЛИЯ-', '-ОТЧЕСТВО-', '-ОРГАНИЗАЦИЯ-',
-             '-ТЕЛЕФОН РАБ-', '-ТЕЛЕФОН ЛИЧНЫЙ-')
-    for t in title:
-        print(t.ljust((width - 1) // 7), end='')
-    print()
-    for i in content:
-        print('│', end='')
-        formated_record_string(i)
-    print('│' + ' ' * (width - 2) + '│')
-    print('└' + '─' * (width - 2) + '┘')
+    while page <= len(content) // records_in_page + 1:
+        os.system('cls')
+        print('┌' + '─' * (width - 2) + '┐')
+        print('│' + ' ' * ((width - 12) // 2) + f'Страница {page}' + ' ' *
+              ((width - 12) // 2) + '│')
+
+        title_print()
+        for i in content[(page - 1) * records_in_page:page * records_in_page]:
+            print('│', end='')
+            formated_record_string(i)
+        print('│' + ' ' * (width - 2) + '│')
+        print('└' + '─' * (width - 2) + '┘')
+        page += 1
+        input('Нажмите [Enter] для просмотра следующей страницы')
 
 
 # [2]
 def insert_new():
-    pass
+    os.system('cls')
+    new_record = [''] + [input(f'Введите {t}: ') for t in title[1:-2]]
+    for t in title[-2:]:
+        telef = input(f'Введите {t} (9 чисел): +79')
+        if telef.isdigit() and len(telef) == 9:
+            new_record.append('79' + telef)
+        else:
+            input_error(telef)
+            return
+    print('┌' + '─' * (width - 2) + '┐')
+    print('│' + ' ' * ((width - 22) // 2) + 'Вы ввели новую запись!')
+    title_print()
+    print('│', end='')
+    formated_record_string(new_record)
+    print('└' + '─' * (width - 2) + '┘')
+    input('Нажмите [Enter] для выхода в основное меню')
+    add_record(new_record)
 
 
 # [3]
@@ -62,10 +79,9 @@ def find_record():
 
 
 # Ошибка ввода
-def read_error(key_str: list):
+def input_error(key_str: list):
     print(
-        f'Ошибка ввода( {key_str} ), для возврата в главное меню нажмите Enter'
-    )
+        f'Ошибка ввода({key_str}), для возврата в главное меню нажмите Enter')
     input()
 
 
@@ -77,6 +93,16 @@ def clear_input_records(record_list: list):
             file.write('\n')
 
 
+# Запись одной строки в конец файла
+def add_record(record: list):
+    with open(text_file, 'r', encoding='utf-8') as file:
+        last_id = file.readlines()[-2].split('\t\t\t')[0]
+        record[0] = str(int(last_id) + 2)
+    with open(text_file, 'a', encoding='utf-8') as file:
+        file.write('\t\t\t'.join(record))
+        file.write('\n')
+
+
 # Чтение всех строк из файла
 def get_from_file() -> list:
     result = []
@@ -86,11 +112,19 @@ def get_from_file() -> list:
     return result
 
 
-# вывод одной строки на экран
+# Вывод одной строки на экран
 def formated_record_string(content: list):
     for l in content:
-        print(l.ljust((width - 1) // 7), end='')
+        print(l.ljust((width - 1) // len(title)), end='')
     print()
 
 
-page_by_page(get_from_file())
+# Вывод шапки таблицы на экран
+def title_print():
+    print('│', end='')
+    for t in title:
+        print(t.ljust((width - 1) // len(title)), end='')
+    print()
+
+
+#insert_new()
