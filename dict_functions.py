@@ -23,6 +23,11 @@ def record_generator(amount_record: int):
         result.append(record)
 
     clear_input_records(result)
+    os.system('cls')
+    print(
+        f'Вы создали текстовый файл с {amount_record} сгенерированными записями'
+    )
+    input('Нажмите [Enter] для перехода в основное меню')
 
 
 # [1]
@@ -33,7 +38,6 @@ def page_by_page(content: list):
         print('┌' + '─' * (width - 2) + '┐')
         print('│' + ' ' * ((width - 12) // 2) + f'Страница {page}' + ' ' *
               ((width - 12) // 2) + '│')
-
         title_print()
         for i in content[(page - 1) * records_in_page:page * records_in_page]:
             print('│', end='')
@@ -41,7 +45,9 @@ def page_by_page(content: list):
         print('│' + ' ' * (width - 2) + '│')
         print('└' + '─' * (width - 2) + '┘')
         page += 1
-        input('Нажмите [Enter] для просмотра следующей страницы')
+        if page <= len(content) // records_in_page + 1:
+            input('Нажмите [Enter] для просмотра следующей страницы')
+    input('Нажмите [Enter] для перехода в основное меню')
 
 
 # [2]
@@ -55,6 +61,7 @@ def insert_new():
         else:
             input_error(telef)
             return
+    os.system('cls')
     print('┌' + '─' * (width - 2) + '┐')
     print('│' + ' ' * ((width - 22) // 2) + 'Вы ввели новую запись!')
     title_print()
@@ -66,13 +73,64 @@ def insert_new():
 
 
 # [3]
-def edit_dict():
-    pass
+def edit_dict(full_phone_dict: list):
+    os.system('cls')
+    num = input('Введите номер записи, которую нужно редактировать: ')
+    position = 0
+    for i in range(len(full_phone_dict)):
+        if full_phone_dict[i][0] == num:
+            position = i
+            print('┌' + '─' * (width - 2) + '┐')
+            title_print()
+            print('│', end='')
+            print('│' + ' ' * ((width - 21) // 2) + 'Вы изменяете запись: ')
+            formated_record_string(full_phone_dict[i])
+            print('└' + '─' * (width - 2) + '┘')
+    new_record = [str(position + 1)
+                  ] + [input(f'Введите {t}: ') for t in title[1:-2]]
+    for t in title[-2:]:
+        telef = input(f'Введите {t} (9 чисел): +79')
+        if telef.isdigit() and len(telef) == 9:
+            new_record.append('79' + telef)
+        else:
+            input_error(telef)
+            return
+    full_phone_dict[position] = new_record
+    clear_input_records(full_phone_dict)
+    os.system('cls')
+    print('┌' + '─' * (width - 2) + '┐')
+    title_print()
+    print('│', end='')
+    print('│' + ' ' * ((width - 20) // 2) + 'Обновленная запись: ')
+    formated_record_string(full_phone_dict[position])
+    print('└' + '─' * (width - 2) + '┘')
+    input('Нажмите [Enter] для выхода в основное меню')
 
 
 # [4]
-def find_record():
-    pass
+def find_record(full_phone_dict: list):
+    os.system('cls')
+    search_record = [input(f'{t} должен содержать: ') for t in title]
+    result = []
+    os.system('cls')
+    print('┌' + '─' * (width - 2) + '┐')
+    title_print()
+    print('│' + ' ' * ((width - 15) // 2) + 'Фильтр поиска: ')
+    print('│', end='')
+    formated_record_string(search_record)
+    print('│' + ' ' * ((width - 18) // 2) + 'Результаты поска: ')
+    for f in full_phone_dict:
+        flag = True
+        for i in range(len(f)):
+            if search_record[i].lower() not in f[i].lower():
+                flag = False
+        if flag:
+            result.append(f)
+            print('│', end='')
+            formated_record_string(f)
+
+    print('└' + '─' * (width - 2) + '┘')
+    input('Нажмите [Enter] для выхода в основное меню')
 
 
 # Дополнительные функции:
@@ -125,6 +183,3 @@ def title_print():
     for t in title:
         print(t.ljust((width - 1) // len(title)), end='')
     print()
-
-
-#insert_new()
