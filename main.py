@@ -1,6 +1,14 @@
+# Структура проекта:
+# 1. main.py - текущий, основной файл, отвечает за интерфейс меню.
+# 2. dict_functions.py - все основные и второстепенные функции программы.
+# 3. data.py - все настройки программы и общие 'константы' программы.
+# 4. phone_dict.txt - файл для хранения данных программы.
 import os
 
 from dict_functions import *
+
+print(logo)
+input('Нажмите [Enter] для перехода в основное меню')
 
 while True:
     os.system('cls')
@@ -16,7 +24,7 @@ while True:
         os.system('cls')
         print('Введите количество генерируемых записей:', end=' ')
         amount_record = input()
-        if amount_record.isdigit():
+        if amount_record.isdigit() and amount_record != '0':
             record_generator(int(amount_record))
         else:
             input_error(amount_record)
@@ -31,6 +39,7 @@ while True:
         find_record(get_from_file())
     elif select_key == 'x' or select_key == 'X':
         os.system('cls')
+        print('Программу создал Артем Ершов')
         break
 
     else:

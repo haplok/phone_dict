@@ -3,8 +3,12 @@ import os
 from data import *
 
 
-# [0]
-def record_generator(amount_record: int):
+# Основные функции
+# [0] - Генерация случайных записей в справочник
+def record_generator(amount_record: int) -> None:
+    '''Функция принимает на вход целое чило - количество генерируемых записей.
+    В результате, текстовый файл очищается и заполняется сгенерированными записями.
+    Выводится информация об генерации в консоль.'''
     result = []
     for i in range(amount_record):
         telephone1: str = '79' + str(random.randint(10**8, 10**9 - 1))
@@ -21,7 +25,7 @@ def record_generator(amount_record: int):
             record = (str(i + 1), names_female.pop(), surnames_female,
                       patronymic_female, organization, telephone1, telephone2)
         result.append(record)
-
+    result[0] = creator
     clear_input_records(result)
     os.system('cls')
     print(
@@ -30,8 +34,10 @@ def record_generator(amount_record: int):
     input('Нажмите [Enter] для перехода в основное меню')
 
 
-# [1]
-def page_by_page(content: list):
+# [1] - Вывод постранично записей из справочника на экран
+def page_by_page(content: list) -> None:
+    '''Функция принимает на вход список списков с данными.
+    В результате, выводится на экран постранично записи из справочника.'''
     page = 1
     while page <= len(content) // records_in_page + 1:
         os.system('cls')
@@ -50,8 +56,10 @@ def page_by_page(content: list):
     input('Нажмите [Enter] для перехода в основное меню')
 
 
-# [2]
-def insert_new():
+# [2] - Добавление новой записи в справочник
+def insert_new() -> None:
+    '''Функция осуществляет интерфейс ввода новой записи.
+    В результате, выводится на экран новая введенная запись.'''
     os.system('cls')
     new_record = [''] + [input(f'Введите {t}: ') for t in title[1:-2]]
     for t in title[-2:]:
@@ -72,8 +80,11 @@ def insert_new():
     add_record(new_record)
 
 
-# [3]
-def edit_dict(full_phone_dict: list):
+# [3] - Редактирование записи в справочнике
+def edit_dict(full_phone_dict: list) -> None:
+    '''Функции на вход подается список списков с данными.
+    Функция осуществляет интерфейс корректировки записи по номеру.
+    В результате, выводится на экран скорректированная запись.'''
     os.system('cls')
     num = input('Введите номер записи, которую нужно редактировать: ')
     position = 0
@@ -107,8 +118,11 @@ def edit_dict(full_phone_dict: list):
     input('Нажмите [Enter] для выхода в основное меню')
 
 
-# [4]
-def find_record(full_phone_dict: list):
+# [4] - Поиск записей по одной или нескольким характеристикам
+def find_record(full_phone_dict: list) -> None:
+    '''Функции на вход подается список списков с данными.
+    Функция осуществляет интерфейс поиска вхождения введенных строк в телефонном справочнике.
+    В результате, выводится на экран подходящие записи в виде таблицы.'''
     os.system('cls')
     search_record = [input(f'{t} должен содержать: ') for t in title]
     result = []
@@ -128,23 +142,28 @@ def find_record(full_phone_dict: list):
             result.append(f)
             print('│', end='')
             formated_record_string(f)
+    if result == []:
+        print('│' + ' ' * ((width - 39) // 2) +
+              'По вашему запросу ничего не найдено :-(')
 
     print('└' + '─' * (width - 2) + '┘')
     input('Нажмите [Enter] для выхода в основное меню')
 
 
-# Дополнительные функции:
-
-
+# Второстепенные функции:
 # Ошибка ввода
-def input_error(key_str: list):
+def input_error(key_str: list) -> None:
+    '''Функции на вход подается строка, вызвавшая ошибку.
+    Функция сообщает пользователю, что введена некорректная последовательность символов.'''
     print(
         f'Ошибка ввода({key_str}), для возврата в главное меню нажмите Enter')
     input()
 
 
 # Запись строк в файл
-def clear_input_records(record_list: list):
+def clear_input_records(record_list: list) -> None:
+    '''Функции на вход подается список списков с данными.
+    Функция очищает файл, и записывает в него все введенные данные.'''
     with open(text_file, 'w', encoding='utf-8') as file:
         for rl in record_list:
             file.write('\t\t\t'.join(rl))
@@ -152,7 +171,9 @@ def clear_input_records(record_list: list):
 
 
 # Запись одной строки в конец файла
-def add_record(record: list):
+def add_record(record: list) -> None:
+    '''Функции на вход подается спискок с данными.
+    Функция записывает в конец файла приведенную запись.'''
     with open(text_file, 'r', encoding='utf-8') as file:
         last_id = file.readlines()[-2].split('\t\t\t')[0]
         record[0] = str(int(last_id) + 2)
@@ -163,6 +184,7 @@ def add_record(record: list):
 
 # Чтение всех строк из файла
 def get_from_file() -> list:
+    '''Функция создает список списков из всех данных из файла.'''
     result = []
     with open(text_file, 'r', encoding='utf-8') as file:
         content = file.read().split('\n')
@@ -171,14 +193,17 @@ def get_from_file() -> list:
 
 
 # Вывод одной строки на экран
-def formated_record_string(content: list):
+def formated_record_string(content: list) -> None:
+    '''Функция на вход принимает список с записью.
+    Функция выводит на экран форматированно запись в виде строки таблицы'''
     for l in content:
         print(l.ljust((width - 1) // len(title)), end='')
     print()
 
 
 # Вывод шапки таблицы на экран
-def title_print():
+def title_print() -> None:
+    '''Функция выводит на экран форматированно шапку таблицы в виде строки'''
     print('│', end='')
     for t in title:
         print(t.ljust((width - 1) // len(title)), end='')
